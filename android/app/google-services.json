@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "775710735297",
+    "project_id": "apexfinance-e6e0a",
+    "storage_bucket": "apexfinance-e6e0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775710735297:android:da21d22ba9c9822f394d40",
+        "android_client_info": {
+          "package_name": "com.apexfinance.tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjjLXaJCtf-daGURaKrDQoVDxA-wvZ5ZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

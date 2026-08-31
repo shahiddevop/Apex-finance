@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexFinance - Premium Personal Finance & Wealth Tracker</title>
+  
+  <!-- Meta SEO -->
+  <meta name="description" content="Take control of your money with ApexFinance. Track incomes, expenses, categories, and generate real-time visual summaries. Beautiful, private, and secure.">
+  <meta name="keywords" content="finance tracker, expense manager, budget tool, money management, visual analytics, charts">
+  <meta name="author" content="ApexFinance">
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       AUTHENTICATION SECTION (Login / Register)
+       ========================================================================== -->
+  <section id="auth-section" class="auth-wrapper">
+    <button class="auth-theme-toggle theme-toggle-btn" title="Toggle Theme">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+    <!-- LOGIN CARD -->
+    <div id="login-card" class="auth-card">
+      <div class="auth-logo">
+        <i class="fa-solid fa-wallet"></i>
+        <span>ApexFinance</span>
+      </div>
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p>Log in to access your financial dashboard</p>
+      </div>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">Username or Email</label>
+          <input type="text" id="login-username" class="form-control" placeholder="Enter username or email" required autocomplete="username">
+          <i class="fa-regular fa-user input-icon"></i>
+        </div>
+        
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+          <i class="fa-regular fa-lock input-icon"></i>
+          <span class="password-toggle" id="login-pass-toggle">
+            <i class="fa-regular fa-eye"></i>
+          </span>
+        </div>
+        
+        <div class="forgot-password-wrapper">
+          <a href="#" id="forgot-password-link">Forgot Password?</a>
+        </div>
+        
+        <button type="submit" class="btn btn-primary auth-btn">
+          Sign In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+
+      <button type="button" id="google-signin-btn" class="btn btn-google auth-btn">
+        <i class="fa-brands fa-google" style="color: #4285F4; margin-right: 8px;"></i> Sign In with Google
+      </button>
+      
+      <div class="auth-footer">
+        Don't have an account? <a href="#" id="go-to-register">Sign Up</a>
+      </div>
+    </div>
+
+    <!-- REGISTRATION CARD -->
+    <div id="register-card" class="auth-card" style="display: none;">
+      <div class="auth-logo">
+        <i class="fa-solid fa-wallet"></i>
+        <span>ApexFinance</span>
+      </div>
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Get started with smart financial tracking today</p>
+      </div>
+      
+      <form id="register-form">
+        <div class="form-group">
+          <label for="register-fullname">Full Name</label>
+          <input type="text" id="register-fullname" class="form-control" placeholder="e.g. Sarah Jenkins" required>
+          <i class="fa-regular fa-id-card input-icon"></i>
+        </div>
+        
+        <div class="form-group">
+          <label for="register-username">Username or Email</label>
+          <input type="text" id="register-username" class="form-control" placeholder="Pick a unique username or email" required autocomplete="username">
+          <i class="fa-regular fa-user input-icon"></i>
+        </div>
+        
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" class="form-control" placeholder="Create a secure password" required autocomplete="new-password">
+          <i class="fa-regular fa-lock input-icon"></i>
+          <span class="password-toggle" id="register-pass-toggle">
+            <i class="fa-regular fa-eye"></i>
+          </span>
+        </div>
+        
+        <button type="submit" class="btn btn-primary auth-btn">
+          Create Account <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+
+      <button type="button" id="google-signup-btn" class="btn btn-google auth-btn">
+        <i class="fa-brands fa-google" style="color: #4285F4; margin-right: 8px;"></i> Sign Up with Google
+      </button>
+      
+      <div class="auth-footer">
+        Already have an account? <a href="#" id="go-to-login">Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MAIN APP DASHBOARD SECTION
+       ========================================================================== -->
+  <section id="app-section" style="display: none;">
+    <!-- Sticky App Header -->
+    <header class="app-header">
+      <div class="container header-wrapper">
+        <div class="logo">
+          <i class="fa-solid fa-wallet"></i>
+          <span>ApexFinance</span>
+        </div>
+        <div class="header-right">
+          <div id="connection-status-container"></div>
+          <button class="btn-theme-toggle theme-toggle-btn" title="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar" id="user-avatar">U</div>
+            <div class="user-info">
+              <span class="name" id="user-display-name">Demo User</span>
+              <span class="role">Wealth Builder</span>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn-logout" title="Log Out">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container app-content">
+      <!-- Welcome & Filters Row -->
+      <div class="app-welcome">
+        <div>
+          <h2 id="welcome-message">Hello, Demo User!</h2>
+          <p>Here is your current financial summary overview.</p>
+        </div>
+        
+        <div class="date-selector">
+          <i class="fa-solid fa-calendar-days" style="color: var(--text-secondary); margin-left: 10px;"></i>
+          <select id="monthly-filter-select">
+            <!-- Dynamically populated e.g. "June 2026", "All Time" -->
+            <option value="all">All Time</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <!-- Card 1: Balance -->
+        <div class="kpi-card balance">
+          <div class="kpi-header">
+            <span>Total Balance</span>
+            <div class="kpi-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          </div>
+          <div class="kpi-value" id="kpi-total-balance">₹0.00</div>
+          <div class="kpi-footer">
+            <i class="fa-solid fa-shield-halved"></i> Net Worth Status
+          </div>
+        </div>
+
+        <!-- Card 2: Income -->
+        <div class="kpi-card income">
+          <div class="kpi-header">
+            <span>Total Income</span>
+            <div class="kpi-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+          </div>
+          <div class="kpi-value text-income" id="kpi-total-income">₹0.00</div>
+          <div class="kpi-footer text-income" id="kpi-income-subtext">
+            <i class="fa-solid fa-caret-up"></i> This Period
+          </div>
+        </div>
+
+        <!-- Card 3: Expenses -->
+        <div class="kpi-card expense">
+          <div class="kpi-header">
+            <span>Total Expenses</span>
+            <div class="kpi-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+          </div>
+          <div class="kpi-value text-expense" id="kpi-total-expense">₹0.00</div>
+          <div class="kpi-footer text-expense" id="kpi-expense-subtext">
+            <i class="fa-solid fa-caret-down"></i> Outflow
+          </div>
+        </div>
+
+        <!-- Card 4: Savings Rate -->
+        <div class="kpi-card savings">
+          <div class="kpi-header">
+            <span>Savings Rate</span>
+            <div class="kpi-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+          </div>
+          <div class="kpi-value" id="kpi-savings-rate">0%</div>
+          <div class="kpi-footer" id="kpi-savings-subtext">Saved from income</div>
+          <div class="progress-bar-container">
+            <div id="savings-progress-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Visuals (Line Charts and Doughnut Breakdown) -->
+      <div class="charts-grid">
+        <!-- Monthly Trend Line Chart -->
+        <div class="chart-card">
+          <h3><i class="fa-solid fa-chart-line"></i> Cash Flow History</h3>
+          <div class="chart-container">
+            <canvas id="cashflowTrendChart"></canvas>
+            <div id="cashflow-no-data" class="no-data-placeholder" style="display: none;">
+              <i class="fa-solid fa-chart-area"></i>
+              <p>No transaction history to chart<br><small>Add transactions to view cash flow trend</small></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Pie Chart -->
+        <div class="chart-card">
+          <h3><i class="fa-solid fa-chart-pie"></i> Expense by Category</h3>
+          <div class="chart-container">
+            <canvas id="categoryBreakdownChart"></canvas>
+            <div id="category-no-data" class="no-data-placeholder" style="display: none;">
+              <i class="fa-solid fa-chart-pie"></i>
+              <p>No expenses recorded in this period<br><small>Add items to view category distribution</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions Management Section -->
+      <div class="manager-card">
+        <div class="manager-header">
+          <h3><i class="fa-solid fa-list-check"></i> Transaction Ledger</h3>
+          <div class="manager-actions">
+            <button id="action-add-income-btn" class="btn btn-income">
+              <i class="fa-solid fa-plus"></i> Add Income
+            </button>
+            <button id="action-add-expense-btn" class="btn btn-expense">
+              <i class="fa-solid fa-minus"></i> Add Expense
+            </button>
+            <button id="action-add-category-btn" class="btn btn-secondary">
+              <i class="fa-solid fa-tags"></i> Create Category
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Controls Bar -->
+        <div class="filters-wrapper">
+          <!-- Type Filter Tabs -->
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-type="all">All</button>
+            <button class="filter-tab" data-type="income">Income</button>
+            <button class="filter-tab" data-type="expense">Expenses</button>
+          </div>
+
+          <div class="filter-group">
+            <!-- Search & Filters -->
+            <div class="search-box">
+              <input type="text" id="ledger-search-input" placeholder="Search description...">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+
+            <div class="filter-selects">
+              <select id="ledger-category-select">
+                <option value="all">All Categories</option>
+              </select>
+              <select id="ledger-sort-select">
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="amount-desc">Highest Amount</option>
+                <option value="amount-asc">Lowest Amount</option>
+              </select>
+            </div>
+
+            <button id="export-csv-btn" class="btn btn-outline" title="Export Ledger to CSV">
+              <i class="fa-solid fa-file-csv"></i> Export
+            </button>
+          </div>
+        </div>
+
+        <!-- Ledger Table -->
+        <div class="table-responsive">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th style="width: 15%">Date</th>
+                <th style="width: 25%">Category</th>
+                <th style="width: 35%">Description</th>
+                <th style="width: 15%">Amount</th>
+                <th style="width: 10%; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="transaction-table-body">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-wrapper">
+          <div class="pagination-info" id="ledger-pagination-info">
+            Showing 0-0 of 0 transactions
+          </div>
+          <div class="pagination-controls">
+            <button id="prev-page-btn" class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+            <button id="next-page-btn" class="page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MODALS & DIALOGS
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- ADD / EDIT TRANSACTION MODAL -->
+  <div class="modal" id="transaction-modal">
+    <div class="modal-header">
+      <h3 id="tx-modal-title"><i class="fa-solid fa-circle-plus"></i> Add Transaction</h3>
+      <button class="btn-close" id="tx-modal-close-btn">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="transaction-form">
+        <!-- Hidden ID for edit state tracking -->
+        <input type="hidden" id="tx-id-input">
+        
+        <!-- Income/Expense Toggle Segmented -->
+        <div class="segmented-control">
+          <button type="button" class="segment-btn active" data-value="expense">
+            <i class="fa-solid fa-circle-minus"></i> Outflow (Expense)
+          </button>
+          <button type="button" class="segment-btn" data-value="income">
+            <i class="fa-solid fa-circle-plus"></i> Inflow (Income)
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tx-amount-input">Amount (₹) <span style="color:var(--color-expense)">*</span></label>
+            <input type="number" id="tx-amount-input" class="form-control" step="0.01" min="0.01" placeholder="0.00" required style="padding-left: 16px;">
+          </div>
+          <div class="form-group">
+            <label for="tx-date-input">Date & Time <span style="color:var(--color-expense)">*</span></label>
+            <input type="datetime-local" id="tx-date-input" class="form-control" required style="padding-left: 16px;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Select Category <span style="color:var(--color-expense)">*</span></label>
+          <!-- Custom visual grid category selector -->
+          <div id="tx-category-picker" class="category-picker-grid">
+            <!-- Dynamically populated categories with icons -->
+          </div>
+          <!-- Real input holder (hidden from display but validation bound) -->
+          <input type="hidden" id="tx-category-input" required>
+        </div>
+
+        <div class="form-group">
+          <label for="tx-desc-input">Description / Notes</label>
+          <input type="text" id="tx-desc-input" class="form-control" placeholder="e.g. Supermarket grocery haul" style="padding-left: 16px;">
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" id="tx-modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button type="submit" form="transaction-form" id="tx-modal-submit-btn" class="btn btn-primary">Save Transaction</button>
+    </div>
+  </div>
+
+  <!-- CREATE CUSTOM CATEGORY MODAL -->
+  <div class="modal" id="category-modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-tag"></i> Create Custom Category</h3>
+      <button class="btn-close" id="cat-modal-close-btn">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <form id="category-form">
+        <div class="form-group">
+          <label for="cat-name-input">Category Name <span style="color:var(--color-expense)">*</span></label>
+          <input type="text" id="cat-name-input" class="form-control" placeholder="e.g. Subscriptions" required style="padding-left: 16px;">
+        </div>
+
+        <div class="form-group">
+          <label>Category Type</label>
+          <!-- Styled Dropdown or Select -->
+          <select id="cat-type-select" class="form-control" style="padding-left: 16px;">
+            <option value="expense">Expense Category</option>
+            <option value="income">Income Category</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pick Color</label>
+            <div id="cat-color-palette" class="color-palette">
+              <!-- Dynamically populated color bubbles -->
+            </div>
+            <!-- Hidden color holder -->
+            <input type="hidden" id="cat-color-input" value="#6366f1">
+          </div>
+
+          <div class="form-group">
+            <label>Select Icon</label>
+            <div id="cat-icon-selector" class="icon-selector-grid">
+              <!-- Dynamically populated icon choices -->
+            </div>
+            <!-- Hidden icon holder -->
+            <input type="hidden" id="cat-icon-input" value="fa-tag">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" id="cat-modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button type="submit" form="category-form" class="btn btn-primary">Create Category</button>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD RESET MODAL -->
+  <div class="modal" id="forgot-password-modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-key"></i> Reset Password</h3>
+      <button class="btn-close" id="forgot-password-close-btn">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="forgot-password-form">
+        <div class="form-group">
+          <label for="forgot-username">Username <span style="color:var(--color-expense)">*</span></label>
+          <input type="text" id="forgot-username" class="form-control" placeholder="Enter your username (e.g. demo)" required style="padding-left: 16px;">
+        </div>
+        
+        <div class="form-group">
+          <label for="forgot-new-password">New Password <span style="color:var(--color-expense)">*</span></label>
+          <input type="password" id="forgot-new-password" class="form-control" placeholder="Enter new password" required style="padding-left: 16px;">
+          <span class="password-toggle" id="forgot-pass-toggle" style="bottom: 10px;">
+            <i class="fa-regular fa-eye"></i>
+          </span>
+        </div>
+      </form>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" id="forgot-password-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button type="submit" form="forgot-password-form" class="btn btn-primary">Reset Password</button>
+    </div>
+  </div>
+
+  <!-- Toast Alerts Container -->
+  <div id="alert-container" class="alert-container"></div>
+
+  <!-- App Main Business Logic scripts -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
